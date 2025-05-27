@@ -14,46 +14,136 @@
             <p class="lead">Build your perfect meal, your way</p>
         </header>
         
-        <!-- Screen 1: Meal Type Selection -->
+        <!-- Screen 1: Main Menu (Updated with both options) -->
         <div id="meal-type-screen" class="screen active">
-            <h2 class="text-center mb-4">Choose a Meal Type</h2>
+            <h2 class="text-center mb-4">Choose Your Approach</h2>
             
-            <div class="row g-4">
-                <div class="col-6 col-md-3">
-                    <div class="meal-type-card" data-meal-type="breakfast">
-                        <div class="meal-type-icon">🍳</div>
-                        <h3>Breakfast</h3>
+            <!-- Meal Builder Section -->
+            <div class="approach-section mb-4">
+                <h3 class="text-center mb-3">🏗️ Build a Meal Step-by-Step</h3>
+                <div class="row g-4">
+                    <div class="col-6 col-md-3">
+                        <div class="meal-type-card" data-meal-type="breakfast">
+                            <div class="meal-type-icon">🍳</div>
+                            <h4>Breakfast</h4>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="meal-type-card" data-meal-type="lunch">
+                            <div class="meal-type-icon">🥗</div>
+                            <h4>Lunch</h4>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="meal-type-card" data-meal-type="dinner">
+                            <div class="meal-type-icon">🍲</div>
+                            <h4>Dinner</h4>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="meal-type-card" data-meal-type="snack">
+                            <div class="meal-type-icon">🥨</div>
+                            <h4>Snack</h4>
+                        </div>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <div class="meal-type-card" data-meal-type="lunch">
-                        <div class="meal-type-icon">🥗</div>
-                        <h3>Lunch</h3>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="meal-type-card" data-meal-type="dinner">
-                        <div class="meal-type-icon">🍲</div>
-                        <h3>Dinner</h3>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="meal-type-card" data-meal-type="snack">
-                        <div class="meal-type-icon">🥨</div>
-                        <h3>Snack</h3>
-                    </div>
+                
+                <div class="text-center mt-4">
+                    <p class="text-muted">─── OR ───</p>
+                    <button id="voice-button" class="voice-btn">
+                        <span>🎤</span> Quick Voice Recipe
+                    </button>
+                    <p class="text-muted mt-2" style="font-size: 12px;">
+                        One-shot voice recipe generation
+                    </p>
                 </div>
             </div>
             
-            <div class="text-center mt-5">
-                <p class="text-muted">─────── OR ───────</p>
-                <button id="voice-button" class="voice-btn">
-                    <span>🎤</span> Use Voice to Create Meal
-                </button>
+            <!-- Diet Coach Section -->
+            <div class="approach-section">
+                <h3 class="text-center mb-3">🍎 Talk to Your Diet Coach</h3>
+                <div class="text-center">
+                    <div class="coach-intro-card mx-auto" style="max-width: 500px;">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Personal Nutrition Guidance</h5>
+                                <p class="card-text">
+                                    Have a conversation with your AI diet coach. Get personalized meal recommendations, 
+                                    ingredient substitutions, and nutritional advice.
+                                </p>
+                                <ul class="text-start mb-3">
+                                    <li>Ask questions about nutrition</li>
+                                    <li>Get custom meal plans</li>
+                                    <li>Find ingredient alternatives</li>
+                                    <li>Understand health benefits</li>
+                                </ul>
+                                <button id="start-diet-coach" class="btn btn-success btn-lg">
+                                    <span>💬</span> Start Conversation
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
-        <!-- Screen 2: Template Selection -->
+        <!-- NEW: Diet Coach Screen -->
+        <div id="diet-coach-screen" class="screen">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" id="end-coach-session">DietDraft</a></li>
+                    <li class="breadcrumb-item active">Diet Coach</li>
+                </ol>
+            </nav>
+            
+            <div class="diet-coach-container">
+                <div class="coach-header text-center mb-4">
+                    <h2>🍎 Your Personal Diet Coach</h2>
+                    <p class="text-muted">Have a conversation about nutrition, get recipes, and find solutions</p>
+                </div>
+                
+                <!-- Chat History -->
+                <div class="coach-chat-container">
+                    <div id="coach-chat-history" class="coach-chat-history">
+                        <!-- Messages will be added here dynamically -->
+                    </div>
+                </div>
+                
+                <!-- Input Area -->
+                <div class="coach-input-area">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <input 
+                                type="text" 
+                                id="coach-text-input" 
+                                class="form-control" 
+                                placeholder="Type your message or use voice..."
+                                autocomplete="off"
+                            >
+                        </div>
+                        <div class="col-2">
+                            <button id="text-coach-button" class="btn btn-success w-100">
+                                Send
+                            </button>
+                        </div>
+                        <div class="col-2">
+                            <button id="voice-coach-button" class="btn btn-outline-success w-100">
+                                🎤
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- End Session Button -->
+                <div class="text-center mt-3">
+                    <button id="end-coach-session" class="btn btn-outline-secondary btn-sm">
+                        End Session
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Screen 2: Template Selection (Existing) -->
         <div id="template-screen" class="screen">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -69,7 +159,7 @@
             </div>
         </div>
         
-        <!-- Screen 3: Base Selection -->
+        <!-- Screen 3: Base Selection (Existing) -->
         <div id="base-screen" class="screen">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -104,7 +194,7 @@
             </div>
         </div>
         
-        <!-- Screen 4: Protein Selection -->
+        <!-- Screen 4: Protein Selection (Existing) -->
         <div id="protein-screen" class="screen">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -139,9 +229,7 @@
             </div>
         </div>
         
-        <!-- Additional screens would continue for vegetables, dietary preferences, etc. -->
-        
-        <!-- Screen for Final Recipe -->
+        <!-- Screen for Final Recipe (Existing) -->
         <div id="final-recipe-screen" class="screen">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -156,7 +244,6 @@
                     
                     <img id="final-recipe-image" src="https://via.placeholder.com/800x400" alt="Recipe" class="img-fluid rounded mb-4">
                     
-                    <!-- CREATE TWO COLUMNS HERE -->
                     <div class="row">
                         <!-- LEFT COLUMN: Recipe Details -->
                         <div class="col-md-8">
@@ -195,9 +282,6 @@
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Replace your current script tag with: -->
     <script type="module" src="js/app.js"></script>
-
-
 </body>
 </html>

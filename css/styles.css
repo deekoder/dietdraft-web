@@ -198,3 +198,214 @@ body {
     font-size: 14px;
     line-height: 1.4;
 }
+/* Add to your css/styles.css */
+
+/* Diet Coach Styles */
+.diet-coach-container {
+    max-width: 800px;
+    margin: 0 auto;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.coach-chat-container {
+    flex: 1;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    background: #f8f9fa;
+}
+
+.coach-chat-history {
+    height: 100%;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.chat-message {
+    margin-bottom: 15px;
+    animation: fadeInUp 0.3s ease;
+}
+
+.user-message .message-content {
+    background: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 15px 15px 5px 15px;
+    margin-left: auto;
+    max-width: 80%;
+    width: fit-content;
+    margin-right: 0;
+}
+
+.coach-message .message-content {
+    background: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 15px 15px 15px 5px;
+    max-width: 80%;
+    width: fit-content;
+}
+
+.coach-data {
+    margin: 10px 0;
+}
+
+.meal-card, .substitutions-card, .reasoning-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.meal-card h4, .substitutions-card h4, .reasoning-card h4 {
+    color: #28a745;
+    margin-bottom: 15px;
+}
+
+.meal-section {
+    margin-bottom: 15px;
+}
+
+.meal-section h5 {
+    color: #495057;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.meal-section ul {
+    margin-bottom: 0;
+}
+
+.substitution-group {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.substitution-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.substitution-group h5 {
+    color: #dc3545;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.reasoning-section {
+    margin-bottom: 15px;
+}
+
+.reasoning-section h5 {
+    color: #6f42c1;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.message-time {
+    font-size: 11px;
+    color: #6c757d;
+    text-align: right;
+    margin-top: 5px;
+}
+
+.coach-input-area {
+    margin-top: 15px;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+}
+
+.expand-btn {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    color: #495057;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.expand-btn:hover {
+    background: #e9ecef;
+}
+
+.typing-indicator .typing-dots {
+    display: inline-block;
+}
+
+.typing-dots span {
+    animation: typing 1.4s infinite;
+    animation-fill-mode: both;
+}
+
+.typing-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.typing-dots span:nth-child(4) {
+    animation-delay: 0.6s;
+}
+
+@keyframes typing {
+    0%, 60%, 100% {
+        opacity: 0;
+    }
+    30% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.approach-section {
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    background: #f8f9fa;
+}
+
+.coach-intro-card .card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .diet-coach-container {
+        height: 60vh;
+    }
+    
+    .user-message .message-content,
+    .coach-message .message-content {
+        max-width: 90%;
+    }
+    
+    .coach-input-area .row {
+        gap: 10px;
+    }
+}

@@ -480,7 +480,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         // Set instructions
-        document.getElementById('final-instructions').textContent = recipe.instructions;
+        // Set instructions with better formatting
+        const instructionsContainer = document.getElementById('final-instructions');
+        const instructions = recipe.instructions.split('\n').filter(step => step.trim());
+
+        if (instructions.length > 1) {
+            // Create ordered list for multiple steps
+            const ol = document.createElement('ol');
+            instructions.forEach(step => {
+                const li = document.createElement('li');
+                li.textContent = step.replace(/^\d+\.\s*/, ''); // Remove existing numbers
+                ol.appendChild(li);
+            });
+            instructionsContainer.innerHTML = '';
+            instructionsContainer.appendChild(ol);
+        } else {
+            // Single paragraph for short instructions
+            instructionsContainer.textContent = recipe.instructions;
+        }        
+            
         
         // Set nutritional information
         let nutritionText = '';
@@ -491,6 +509,11 @@ document.addEventListener('DOMContentLoaded', function() {
             nutritionText += `<strong>Dietary Information:</strong> ${recipe.dietary_info}`;
         }
         document.getElementById('final-nutrition').innerHTML = nutritionText;
+        // Add this line after setting final-nutrition
+
+        // ADD THIS LINE:
+        getMealReasoning(recipe);
+
         
         // Show the final recipe screen
         showScreen('final-recipe-screen');
@@ -737,5 +760,69 @@ document.addEventListener('DOMContentLoaded', function() {
         const allOptions = getProteinOptions();
         
         return allOptions.find(option => option.id === proteinId) || { name: 'Unknown Protein', icon: '❓' };
+    }
+
+    // Add these functions to your existing app.js
+
+// Get meal reasoning from API
+    async function getMealReasoning(recipe) {
+        try {
+            const response = await fetch(`${API_URL}/meal-reasoning`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    meal_name: recipe.meal_name,
+                    ingredients: recipe.ingredients,
+                    instructions: recipe.instructions,
+                    dietary_preferences: []
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to get meal reasoning');
+            }
+            
+            const reasoningData = await response.json();
+            displayMealReasoning(reasoningData.reasoning);
+            
+        } catch (error) {
+            console.error('Error getting meal reasoning:', error);
+            displayMealReasoning({
+                key_ingredient_choices: "This meal combines nutritious ingredients for balanced nutrition.",
+                nutritional_benefits: "Provides essential macronutrients and micronutrients.",
+                dietary_alignment: "Supports general health and wellness goals."
+            });
+        }
+    }
+
+    // Display meal reasoning in the UI
+    function displayMealReasoning(reasoning) {
+        const reasoningContainer = document.getElementById('meal-reasoning-container');
+        
+        if (!reasoningContainer) {
+            console.warn('Meal reasoning container not found in HTML');
+            return;
+        }
+        
+        reasoningContainer.innerHTML = `
+            <h5>🧠 Nutritional Insights</h5>
+            
+            <div class="reasoning-section">
+                <h6>🥗 Key Ingredients</h6>
+                <p>${reasoning.key_ingredient_choices}</p>
+            </div>
+            
+            <div class="reasoning-section">
+                <h6>💪 Health Benefits</h6>
+                <p>${reasoning.nutritional_benefits}</p>
+            </div>
+            
+            <div class="reasoning-section">
+                <h6>🎯 Dietary Alignment</h6>
+                <p>${reasoning.dietary_alignment}</p>
+            </div>
+        `;
     }
 });

@@ -1,17 +1,39 @@
-// js/diet-coach.js - Conversational Diet Coach Interface
+// js/diet-coach.js - Fixed conversation memory
 import { showMessage, API_URL } from './utils.js';
 
-// Diet coach state
+// Diet coach state with persistent user management
 let currentConversationId = null;
+let currentUserId = null;
 let conversationHistory = [];
 let isListening = false;
 
+// Initialize persistent user ID
+function initializeUser() {
+    // Get or create persistent user ID
+    currentUserId = localStorage.getItem('dietdraft_user_id');
+    if (!currentUserId) {
+        currentUserId = generateUUID();
+        localStorage.setItem('dietdraft_user_id', currentUserId);
+        console.log('🆔 Created new user ID:', currentUserId);
+    } else {
+        console.log('🆔 Loaded existing user ID:', currentUserId);
+    }
+}
+
+function generateUUID() {
+    return 'user-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+}
+
 export function initDietCoach() {
+    // Initialize user first
+    initializeUser();
+    
     const startCoachButton = document.getElementById('start-diet-coach');
     const voiceCoachButton = document.getElementById('voice-coach-button');
     const textCoachButton = document.getElementById('text-coach-button');
     const coachTextInput = document.getElementById('coach-text-input');
     const endCoachButton = document.getElementById('end-coach-session');
+    const newConversationButton = document.getElementById('new-conversation-button');
     
     if (startCoachButton) {
         startCoachButton.addEventListener('click', startDietCoachSession);
@@ -36,6 +58,10 @@ export function initDietCoach() {
     if (endCoachButton) {
         endCoachButton.addEventListener('click', endDietCoachSession);
     }
+    
+    if (newConversationButton) {
+        newConversationButton.addEventListener('click', startNewConversation);
+    }
 }
 
 function startDietCoachSession() {
@@ -43,24 +69,65 @@ function startDietCoachSession() {
     document.getElementById('diet-coach-screen').classList.add('active');
     document.getElementById('meal-type-screen').classList.remove('active');
     
-    // Reset conversation
-    currentConversationId = null;
-    conversationHistory = [];
+    // Check if we're continuing an existing conversation
+    const isExistingConversation = currentConversationId !== null;
     
-    // Clear chat history
+    console.log('🚀 Starting diet coach session');
+    console.log('👤 User ID:', currentUserId);
+    console.log('💬 Existing conversation:', isExistingConversation ? currentConversationId : 'None');
+    
+    // Clear chat history display (but maintain conversation state)
     const chatHistory = document.getElementById('coach-chat-history');
     if (chatHistory) {
         chatHistory.innerHTML = '';
     }
     
-    // Add welcome message
-    addCoachMessage("Hello! I'm your personal diet coach. I can help you create meals, find ingredient substitutions, and provide nutritional guidance. What would you like to work on today?");
+    // Add appropriate welcome message
+    if (isExistingConversation) {
+        addCoachMessage("Welcome back! I remember our conversation. What would you like to work on next?");
+        // Show conversation context indicator
+        showMessage('Continuing previous conversation', 'info');
+    } else {
+        addCoachMessage("Hello! I'm your personal diet coach. I can help you create meals, find ingredient substitutions, and provide nutritional guidance. What would you like to work on today?");
+    }
     
     // Focus on text input
     const textInput = document.getElementById('coach-text-input');
     if (textInput) {
         textInput.focus();
     }
+    
+    // Show session info in UI
+    updateSessionInfo();
+}
+
+function updateSessionInfo() {
+    // Add session info to the UI for debugging
+    const sessionInfo = document.createElement('div');
+    sessionInfo.id = 'session-info';
+    sessionInfo.style.cssText = `
+        position: fixed; bottom: 10px; left: 10px; 
+        background: rgba(0,0,0,0.7); color: white; 
+        padding: 5px 10px; border-radius: 5px; 
+        font-size: 11px; z-index: 1000;
+    `;
+    sessionInfo.innerHTML = `
+        User: ${currentUserId ? currentUserId.substr(0, 12) + '...' : 'None'}<br>
+        Conversation: ${currentConversationId ? currentConversationId.substr(0, 8) + '...' : 'New'}
+    `;
+    
+    // Remove existing session info
+    const existing = document.getElementById('session-info');
+    if (existing) existing.remove();
+    
+    document.body.appendChild(sessionInfo);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        if (sessionInfo.parentNode) {
+            sessionInfo.remove();
+        }
+    }, 5000);
 }
 
 function handleVoiceCoachClick() {
@@ -145,13 +212,19 @@ async function processDietCoachMessage(message) {
     
     try {
         const request = {
-            message: message
+            message: message,
+            user_id: currentUserId // Always include user ID
         };
         
-        // Add conversation ID if we have one
+        // CRITICAL: Include conversation_id if we have one for context
         if (currentConversationId) {
             request.conversation_id = currentConversationId;
+            console.log('💬 Continuing conversation:', currentConversationId);
+        } else {
+            console.log('💬 Starting new conversation for user:', currentUserId);
         }
+        
+        console.log('📤 Sending request:', request);
         
         const response = await fetch(`${API_URL}/diet-coach`, {
             method: 'POST',
@@ -160,13 +233,31 @@ async function processDietCoachMessage(message) {
         });
         
         if (!response.ok) {
-            throw new Error('Diet coach request failed');
+            const errorText = await response.text();
+            throw new Error(`API error ${response.status}: ${errorText}`);
         }
         
         const data = await response.json();
+        console.log('📥 Received response:', data);
         
-        // Store conversation ID
-        currentConversationId = data.conversation_id;
+        // CRITICAL: Always update conversation and user IDs
+        if (data.conversation_id) {
+            const wasNewConversation = !currentConversationId;
+            currentConversationId = data.conversation_id;
+            
+            if (wasNewConversation) {
+                console.log('🆕 Started new conversation:', currentConversationId);
+            } else {
+                console.log('✅ Continued conversation:', currentConversationId);
+            }
+        }
+        
+        // Update user ID if provided (for anonymous user management)
+        if (data.user_id && data.user_id !== currentUserId) {
+            currentUserId = data.user_id;
+            localStorage.setItem('dietdraft_user_id', currentUserId);
+            console.log('🔄 Updated user ID:', currentUserId);
+        }
         
         // Remove typing indicator
         removeTypingIndicator();
@@ -175,14 +266,23 @@ async function processDietCoachMessage(message) {
         addCoachMessage(data.response);
         
         // Handle any structured data
-        if (data.data) {
-            handleStructuredData(data.data, data.tools_used);
+        if (data.data && Object.keys(data.data).length > 0) {
+            console.log('📊 Processing structured data:', Object.keys(data.data));
+            handleStructuredData(data.data, data.tools_used || []);
+        }
+        
+        // Show conversation status
+        const toolsUsed = data.tools_used || [];
+        if (toolsUsed.length > 0) {
+            console.log('🔧 Tools used:', toolsUsed);
+            showMessage(`Used tools: ${toolsUsed.join(', ')}`, 'info');
         }
         
     } catch (error) {
         removeTypingIndicator();
-        console.error('Diet coach error:', error);
+        console.error('❌ Diet coach error:', error);
         addCoachMessage("I'm having trouble right now. Could you try rephrasing your question?");
+        showMessage('Connection error - check console for details', 'error');
     }
 }
 
@@ -380,14 +480,52 @@ function resetVoiceButton(button, originalText) {
     isListening = false;
 }
 
+// Add a function to explicitly start a new conversation
+function startNewConversation() {
+    console.log('🔄 Starting fresh conversation');
+    console.log('📜 Previous conversation ID:', currentConversationId);
+    
+    // Reset conversation state
+    currentConversationId = null;
+    conversationHistory = [];
+    
+    // Clear chat history
+    const chatHistory = document.getElementById('coach-chat-history');
+    if (chatHistory) {
+        chatHistory.innerHTML = '';
+    }
+    
+    console.log('✨ Started fresh conversation');
+    addCoachMessage("Starting a fresh conversation! What would you like to work on?");
+    showMessage('Started new conversation', 'info');
+    
+    // Update session info
+    updateSessionInfo();
+}
+
 function endDietCoachSession() {
     // Hide diet coach screen
     document.getElementById('diet-coach-screen').classList.remove('active');
     document.getElementById('meal-type-screen').classList.add('active');
     
-    // Reset state
-    currentConversationId = null;
-    conversationHistory = [];
+    console.log('🔚 Ending diet coach session');
+    console.log('💾 Conversation will be preserved for next session');
     
-    showMessage('Diet coach session ended. Thanks for chatting!', 'info');
+    // DON'T reset conversation - preserve it for next session
+    // Only reset when user explicitly starts new conversation
+    
+    // Remove session info
+    const sessionInfo = document.getElementById('session-info');
+    if (sessionInfo) sessionInfo.remove();
+    
+    showMessage('Diet coach session ended. Conversation saved for next time!', 'info');
+}
+
+// Export function to get current conversation state (for debugging)
+export function getConversationState() {
+    return {
+        userId: currentUserId,
+        conversationId: currentConversationId,
+        historyLength: conversationHistory.length
+    };
 }

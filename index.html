@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DietDraft - Custom Meal Builder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="meal-builder-container">
+        <header class="page-header">
+            <h1 class="display-4 fw-bold text-success">DietDraft</h1>
+            <p class="lead">Build your perfect meal, your way</p>
+        </header>
+        
+        <!-- Screen 1: Meal Type Selection -->
+        <div id="meal-type-screen" class="screen active">
+            <h2 class="text-center mb-4">Choose a Meal Type</h2>
+            
+            <div class="row g-4">
+                <div class="col-6 col-md-3">
+                    <div class="meal-type-card" data-meal-type="breakfast">
+                        <div class="meal-type-icon">🍳</div>
+                        <h3>Breakfast</h3>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="meal-type-card" data-meal-type="lunch">
+                        <div class="meal-type-icon">🥗</div>
+                        <h3>Lunch</h3>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="meal-type-card" data-meal-type="dinner">
+                        <div class="meal-type-icon">🍲</div>
+                        <h3>Dinner</h3>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="meal-type-card" data-meal-type="snack">
+                        <div class="meal-type-icon">🥨</div>
+                        <h3>Snack</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-5">
+                <p class="text-muted">─────── OR ───────</p>
+                <button id="voice-button" class="voice-btn">
+                    <span>🎤</span> Use Voice to Create Meal
+                </button>
+            </div>
+        </div>
+        
+        <!-- Screen 2: Template Selection -->
+        <div id="template-screen" class="screen">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" id="back-to-meal-types">DietDraft</a></li>
+                    <li class="breadcrumb-item active" id="meal-type-breadcrumb">Meal Type</li>
+                </ol>
+            </nav>
+            
+            <h2 class="mb-4" id="template-header">Popular Templates</h2>
+            
+            <div class="row g-4" id="templates-container">
+                <!-- Templates will be added dynamically -->
+            </div>
+        </div>
+        
+        <!-- Screen 3: Base Selection -->
+        <div id="base-screen" class="screen">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" id="back-to-meal-types-from-base">DietDraft</a></li>
+                    <li class="breadcrumb-item"><a href="#" id="back-to-templates">Meal Type</a></li>
+                    <li class="breadcrumb-item active">Choose Base</li>
+                </ol>
+            </nav>
+            
+            <div class="meal-preview-card">
+                <img src="https://via.placeholder.com/800x400" alt="Meal Preview" class="meal-preview-img" id="meal-preview-img">
+                <div class="meal-preview-details">
+                    <h3 id="meal-preview-title">Custom Meal</h3>
+                    <div class="meal-preview-selected">
+                        <p class="mb-1">Selected so far:</p>
+                        <ul id="selected-items-list">
+                            <li id="selected-meal-type">Meal type: Dinner</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="mb-4">Choose Your Base</h2>
+            
+            <div class="row g-3" id="base-options-container">
+                <!-- Base options will be added dynamically -->
+            </div>
+            
+            <div class="step-navigation">
+                <button class="btn btn-outline-secondary step-btn" id="back-from-base">Back</button>
+                <button class="btn btn-success step-btn" id="next-from-base">Next Step</button>
+            </div>
+        </div>
+        
+        <!-- Screen 4: Protein Selection -->
+        <div id="protein-screen" class="screen">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" id="back-to-start-from-protein">DietDraft</a></li>
+                    <li class="breadcrumb-item"><a href="#" id="back-to-base-from-protein">Choose Base</a></li>
+                    <li class="breadcrumb-item active">Choose Protein</li>
+                </ol>
+            </nav>
+            
+            <div class="meal-preview-card">
+                <img src="https://via.placeholder.com/800x400" alt="Meal Preview" class="meal-preview-img">
+                <div class="meal-preview-details">
+                    <h3 id="meal-preview-title-protein">Custom Meal</h3>
+                    <div class="meal-preview-selected">
+                        <p class="mb-1">Selected so far:</p>
+                        <ul id="selected-items-list-protein">
+                            <!-- Selected items will be added dynamically -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="mb-4">Choose Your Protein</h2>
+            
+            <div class="row g-3" id="protein-options-container">
+                <!-- Protein options will be added dynamically -->
+            </div>
+            
+            <div class="step-navigation">
+                <button class="btn btn-outline-secondary step-btn" id="back-from-protein">Back</button>
+                <button class="btn btn-success step-btn" id="next-from-protein">Next Step</button>
+            </div>
+        </div>
+        
+        <!-- Additional screens would continue for vegetables, dietary preferences, etc. -->
+        
+        <!-- Screen for Final Recipe -->
+        <div id="final-recipe-screen" class="screen">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" id="back-to-start">DietDraft</a></li>
+                    <li class="breadcrumb-item active">Your Recipe</li>
+                </ol>
+            </nav>
+            
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 id="final-recipe-title" class="card-title text-center mb-4">Customized Meal</h2>
+                    
+                    <img id="final-recipe-image" src="https://via.placeholder.com/800x400" alt="Recipe" class="img-fluid rounded mb-4">
+                    
+                    <h4>Ingredients</h4>
+                    <ul id="final-ingredients-list" class="mb-4">
+                        <!-- Ingredients will be added dynamically -->
+                    </ul>
+                    
+                    <h4>Instructions</h4>
+                    <div id="final-instructions" class="mb-4">
+                        <!-- Instructions will be added dynamically -->
+                    </div>
+                    
+                    <h4>Nutritional Information</h4>
+                    <div id="final-nutrition" class="p-3 bg-light rounded mb-4">
+                        <!-- Nutrition info will be added dynamically -->
+                    </div>
+                    
+                    <div class="d-flex justify-content-center gap-3 mt-4">
+                        <button class="btn btn-outline-secondary" id="start-over-btn">Start Over</button>
+                        <button class="btn btn-outline-primary" id="share-btn">Share Recipe</button>
+                        <button class="btn btn-success" id="save-btn">Save Recipe</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

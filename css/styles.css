@@ -1,0 +1,175 @@
+:root {
+    --primary-color: #4CAF50;
+    --primary-dark: #388E3C;
+    --accent-color: #FF9800;
+    --light-gray: #f8f9fa;
+}
+
+body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #f9f9f9;
+}
+
+.meal-builder-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.meal-type-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
+}
+
+.meal-type-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.meal-type-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.meal-template-card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.meal-template-card:hover {
+    transform: translateY(-5px);
+}
+
+.meal-template-img {
+    height: 160px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.meal-template-info {
+    padding: 15px;
+}
+
+.meal-template-tags {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.meal-tag {
+    background-color: var(--light-gray);
+    color: var(--primary-dark);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.custom-option-card {
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.custom-option-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+}
+
+.custom-option-card.selected {
+    border-color: var(--primary-color);
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+.custom-option-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.meal-preview-card {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.meal-preview-img {
+    height: 180px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.meal-preview-details {
+    padding: 15px;
+}
+
+.meal-preview-selected {
+    background-color: var(--light-gray);
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+
+.step-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.step-btn {
+    padding: 10px 25px;
+    border-radius: 30px;
+    font-weight: 500;
+}
+
+.voice-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin: 30px auto;
+    width: fit-content;
+}
+
+.voice-btn:hover {
+    background-color: #e67e00;
+}
+
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

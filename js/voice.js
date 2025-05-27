@@ -1,93 +1,109 @@
-// js/voice.js
-import { API_URL } from './utils.js';
-import { displayFinalRecipe } from './recipes.js';
+// voice.js - Voice functionality only
+import { showMessage, API_URL } from './utils.js';
+import { displayRecipe } from './recipe.js';
 
-export function initVoiceButton() {
+export function initVoice() {
     const voiceButton = document.getElementById('voice-button');
+    if (!voiceButton) return;
     
-    if (voiceButton) {
-        voiceButton.addEventListener('click', function() {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert('Your browser does not support speech recognition. Please try Chrome, Edge, or Safari.');
-                return;
-            }
-            
-            startVoiceRecognition();
-        });
+    voiceButton.addEventListener('click', handleVoiceClick);
+}
+
+function handleVoiceClick() {
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+        showMessage('Speech not supported. Use Chrome/Safari.', 'error');
+        return;
+    }
+    startListening();
+}
+
+function startListening() {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    const button = document.getElementById('voice-button');
+    
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    
+    const originalText = button.innerHTML;
+    button.innerHTML = '🎙️ Listening...';
+    button.disabled = true;
+    
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        resetButton(button, originalText);
+        processVoice(transcript);
+    };
+    
+    recognition.onerror = (event) => {
+        console.error('Speech error:', event.error);
+        resetButton(button, originalText);
+        showMessage('Voice error. Try again.', 'error');
+    };
+    
+    recognition.onend = () => {
+        resetButton(button, originalText);
+    };
+    
+    try {
+        recognition.start();
+        showMessage('Listening... Tell me what you want!', 'info');
+    } catch (error) {
+        resetButton(button, originalText);
+        showMessage('Failed to start listening.', 'error');
     }
 }
 
-function startVoiceRecognition() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
+async function processVoice(transcript) {
+    showMessage(`Processing: "${transcript}"`, 'info');
     
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.lang = 'en-US';
-    
-    recognition.onresult = function(event) {
-        const transcript = event.results[0][0].transcript;
-        processVoiceInput(transcript);
-    };
-    
-    recognition.onerror = function(event) {
-        console.error('Speech recognition error:', event.error);
-        alert('Error recognizing speech. Please try again.');
-    };
-    
-    recognition.start();
-    alert('Listening... Say your meal request.');
-}
-
-async function processVoiceInput(voiceText) {
     try {
         const response = await fetch(`${API_URL}/parse-voice`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                voice_text: voiceText
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ voice_text: transcript })
         });
         
         if (!response.ok) {
-            throw new Error('Failed to parse voice input');
+            throw new Error('Parse failed');
         }
         
-        const parsedData = await response.json();
+        const data = await response.json();
         
-        if (confirm(`I understood: ${parsedData.parsed_text}\n\nGenerate recipe?`)) {
-            generateRecipeFromVoice(parsedData);
+        if (confirm(`Generate recipe for: ${data.parsed_text}?`)) {
+            generateFromVoice(data);
         }
-        
     } catch (error) {
-        console.error('Error processing voice input:', error);
-        alert('Error processing your request. Please try again.');
+        console.error('Voice processing error:', error);
+        showMessage('Processing failed. Try again.', 'error');
     }
 }
 
-async function generateRecipeFromVoice(parsedData) {
+async function generateFromVoice(data) {
+    delete data.parsed_text;
+    
     try {
-        delete parsedData.parsed_text;
+        showMessage('Generating recipe...', 'info');
         
         const response = await fetch(`${API_URL}/generate-meal`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(parsedData)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
         });
         
         if (!response.ok) {
-            throw new Error('Failed to generate recipe');
+            throw new Error('Generation failed');
         }
         
         const recipe = await response.json();
-        displayFinalRecipe(recipe);
-        
+        displayRecipe(recipe);
     } catch (error) {
-        console.error('Error generating recipe:', error);
-        alert('Error generating recipe. Please try again.');
+        console.error('Recipe generation error:', error);
+        showMessage('Recipe generation failed.', 'error');
     }
+}
+
+function resetButton(button, originalText) {
+    button.innerHTML = originalText;
+    button.disabled = false;
 }

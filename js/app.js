@@ -465,15 +465,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function displayFinalRecipe(recipe) {
         // Set recipe title
         document.getElementById('final-recipe-title').textContent = recipe.meal_name;
-        
-        // Set recipe image (in a real app, you would have actual images)
-        // For now, we'll use a placeholder image
-        //document.getElementById('final-recipe-image').src = `https://via.placeholder.com/800x400?text=${encodeURIComponent(recipe.meal_name)}`;
+             
 
-        // Set recipe image with real food image if available
-        getMealImage(recipe.meal_name).then(imageUrl => {
-            document.getElementById('final-recipe-image').src = imageUrl;
-        });
+        // In displayFinalRecipe function:
+        document.getElementById('final-recipe-image').src = `https://dummyimage.com/800x400/4CAF50/ffffff&text=${encodeURIComponent(recipe.meal_name)}`;
         
         // Set ingredients
         const ingredientsList = document.getElementById('final-ingredients-list');
@@ -588,127 +583,92 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Get templates for meal type
     function getTemplatesForMealType(mealType) {
-        // In a real app, this would be an API call
-        const templates = {
-            breakfast: [
-                {
-                    id: 'b1',
-                    name: 'Avocado Toast',
-                    image: 'https://via.placeholder.com/300x200?text=Avocado+Toast',
-                    tags: ['Quick', 'High-Protein']
-                },
-                {
-                    id: 'b2',
-                    name: 'Overnight Oats',
-                    image: 'https://via.placeholder.com/300x200?text=Overnight+Oats',
-                    tags: ['Meal-Prep', 'Fiber-Rich']
-                },
-                {
-                    id: 'b3',
-                    name: 'Veggie Omelette',
-                    image: 'https://via.placeholder.com/300x200?text=Veggie+Omelette',
-                    tags: ['Low-Carb', 'High-Protein']
-                }
-            ],
-            lunch: [
-                {
-                    id: 'l1',
-                    name: 'Quinoa Bowl',
-                    image: 'https://via.placeholder.com/300x200?text=Quinoa+Bowl',
-                    tags: ['Vegetarian', 'High-Protein']
-                },
-                {
-                    id: 'l2',
-                    name: 'Chicken Wrap',
-                    image: 'https://via.placeholder.com/300x200?text=Chicken+Wrap',
-                    tags: ['Quick', 'Portable']
-                },
-                {
-                    id: 'l3',
-                    name: 'Mediterranean Salad',
-                    image: 'https://via.placeholder.com/300x200?text=Mediterranean+Salad',
-                    tags: ['Low-Carb', 'Vegetarian']
-                }
-            ],
-            dinner: [
-                {
-                    id: 'd1',
-                    name: 'Salmon with Vegetables',
-                    image: 'https://via.placeholder.com/300x200?text=Salmon+with+Vegetables',
-                    tags: ['High-Protein', 'Omega-3']
-                },
-                {
-                    id: 'd2',
-                    name: 'Vegetarian Stir-Fry',
-                    image: 'https://via.placeholder.com/300x200?text=Vegetarian+Stir-Fry',
-                    tags: ['Quick', 'Vegetarian']
-                },
-                {
-                    id: 'd3',
-                    name: 'Chicken and Rice Bowl',
-                    image: 'https://via.placeholder.com/300x200?text=Chicken+and+Rice+Bowl',
-                    tags: ['Meal-Prep', 'High-Protein']
-                }
-            ],
-            snack: [
-                {
-                    id: 's1',
-                    name: 'Greek Yogurt Parfait',
-                    image: 'https://via.placeholder.com/300x200?text=Greek+Yogurt+Parfait',
-                    tags: ['High-Protein', 'Low-Sugar']
-                },
-                {
-                    id: 's2',
-                    name: 'Fruit and Nut Mix',
-                    image: 'https://via.placeholder.com/300x200?text=Fruit+and+Nut+Mix',
-                    tags: ['Energy-Boosting', 'No-Cook']
-                },
-                {
-                    id: 's3',
-                    name: 'Hummus and Veggies',
-                    image: 'https://via.placeholder.com/300x200?text=Hummus+and+Veggies',
-                    tags: ['Fiber-Rich', 'Plant-Based']
-                }
-            ]
-        };
-        
-        return templates[mealType] || [];
+    const templates = {
+        breakfast: [
+            {
+                id: 'b1',
+                name: 'Avocado Toast',
+                image: 'https://dummyimage.com/300x200/4CAF50/ffffff&text=Avocado+Toast',
+                tags: ['Quick', 'High-Protein']
+            },
+            {
+                id: 'b2',
+                name: 'Overnight Oats',
+                image: 'https://dummyimage.com/300x200/FF9800/ffffff&text=Overnight+Oats',
+                tags: ['Meal-Prep', 'Fiber-Rich']
+            },
+            {
+                id: 'b3',
+                name: 'Veggie Omelette',
+                image: 'https://dummyimage.com/300x200/FFC107/ffffff&text=Veggie+Omelette',
+                tags: ['Low-Carb', 'High-Protein']
+            }
+        ],
+        lunch: [
+            {
+                id: 'l1',
+                name: 'Quinoa Bowl',
+                image: 'https://dummyimage.com/300x200/8BC34A/ffffff&text=Quinoa+Bowl',
+                tags: ['Vegetarian', 'High-Protein']
+            },
+            {
+                id: 'l2',
+                name: 'Chicken Wrap',
+                image: 'https://dummyimage.com/300x200/2196F3/ffffff&text=Chicken+Wrap',
+                tags: ['Quick', 'Portable']
+            },
+            {
+                id: 'l3',
+                name: 'Mediterranean Salad',
+                image: 'https://dummyimage.com/300x200/009688/ffffff&text=Mediterranean+Salad',
+                tags: ['Low-Carb', 'Vegetarian']
+            }
+        ],
+        dinner: [
+            {
+                id: 'd1',
+                name: 'Salmon with Vegetables',
+                image: 'https://dummyimage.com/300x200/E91E63/ffffff&text=Salmon+with+Vegetables',
+                tags: ['High-Protein', 'Omega-3']
+            },
+            {
+                id: 'd2',
+                name: 'Vegetarian Stir-Fry',
+                image: 'https://dummyimage.com/300x200/4CAF50/ffffff&text=Vegetarian+Stir-Fry',
+                tags: ['Quick', 'Vegetarian']
+            },
+            {
+                id: 'd3',
+                name: 'Chicken and Rice Bowl',
+                image: 'https://dummyimage.com/300x200/FF5722/ffffff&text=Chicken+Rice+Bowl',
+                tags: ['Meal-Prep', 'High-Protein']
+            }
+        ],
+        snack: [
+            {
+                id: 's1',
+                name: 'Greek Yogurt Parfait',
+                image: 'https://dummyimage.com/300x200/9C27B0/ffffff&text=Greek+Yogurt+Parfait',
+                tags: ['High-Protein', 'Low-Sugar']
+            },
+            {
+                id: 's2',
+                name: 'Fruit and Nut Mix',
+                image: 'https://dummyimage.com/300x200/FF9800/ffffff&text=Fruit+Nut+Mix',
+                tags: ['Energy-Boosting', 'No-Cook']
+            },
+            {
+                id: 's3',
+                name: 'Hummus and Veggies',
+                image: 'https://dummyimage.com/300x200/8BC34A/ffffff&text=Hummus+Veggies',
+                tags: ['Fiber-Rich', 'Plant-Based']
+            }
+        ]
+    };
+    
+    return templates[mealType] || [];
     }
     
-
-    // Helper function to get meal image with fallback
-    async function getMealImage(mealName, mealType = null) {
-        // Try to get a real food image first
-        try {
-            const searchTerm = mealName.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ',');
-            const unsplashUrl = `https://source.unsplash.com/400x300/?${searchTerm},food`;
-            
-            // Test if the image loads successfully
-            const imageExists = await testImageUrl(unsplashUrl);
-            if (imageExists) {
-                return unsplashUrl;
-            }
-        } catch (error) {
-            console.log('Failed to fetch real image, using placeholder');
-        }
-        
-        // Fallback to placeholder
-        return `https://via.placeholder.com/400x300/4a90e2/ffffff?text=${encodeURIComponent(mealName)}`;
-    }
-
-    // Helper function to test if an image URL is valid
-    function testImageUrl(url) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => resolve(true);
-            img.onerror = () => resolve(false);
-            img.src = url;
-            
-            // Timeout after 3 seconds
-            setTimeout(() => resolve(false), 3000);
-        });
-    }
-
     // Get base options for meal type
     function getBaseOptionsForMealType(mealType) {
         // In a real app, this would be an API call
